@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Trash2, Download, Copy, Check, CornerDownLeft, Sparkles } from 'lucide-react';
 import { HistoryItem } from '../utils/history';
 import { soundManager } from '../utils/audio';
+import { Language, getTranslation } from '../utils/i18n';
 
 interface HistoryDrawerProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface HistoryDrawerProps {
   onSelectResult: (result: string) => void;
   onDeleteItem: (id: string) => void;
   onClearAll: () => void;
+  language?: Language;
 }
 
 export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
@@ -19,8 +21,10 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
   onSelectResult,
   onDeleteItem,
   onClearAll,
+  language = 'en',
 }) => {
   const [copiedAll, setCopiedAll] = useState(false);
+  const t = getTranslation(language);
 
   if (!isOpen) return null;
 
@@ -63,7 +67,7 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
               className="text-base font-bold text-white tracking-wider"
               style={{ fontFamily: 'Orbitron, sans-serif' }}
             >
-              CHRONICLES
+              {t.histTitle}
             </h2>
             <span className="text-xs font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
               {history.length}
@@ -75,15 +79,15 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
               <>
                 <button
                   onClick={handleCopyAll}
-                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-cyan-300 transition-colors"
-                  title="Copy all history"
+                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer"
+                  title={t.histCopyAll}
                 >
                   {copiedAll ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 </button>
                 <button
                   onClick={handleDownload}
-                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-cyan-300 transition-colors"
-                  title="Export history JSON"
+                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer"
+                  title={t.histExportJSON}
                 >
                   <Download className="w-4 h-4" />
                 </button>
@@ -92,8 +96,8 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                     soundManager.play('clear');
                     onClearAll();
                   }}
-                  className="p-1.5 rounded-lg hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 transition-colors"
-                  title="Clear all history"
+                  className="p-1.5 rounded-lg hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
+                  title={t.histClearConfirm}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -105,7 +109,7 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                 soundManager.play('click');
                 onClose();
               }}
-              className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors ml-1"
+              className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors ml-1 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -117,9 +121,9 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
           {history.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
               <Sparkles className="w-8 h-8 text-violet-400/50 mb-3" />
-              <p className="text-sm font-medium text-slate-400">No calculations recorded</p>
+              <p className="text-sm font-medium text-slate-400">{t.histEmptyTitle}</p>
               <p className="text-xs text-slate-600 mt-1">
-                Computations performed in any mode will automatically stream here.
+                {t.histEmptyDesc}
               </p>
             </div>
           ) : (
@@ -137,7 +141,7 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                         soundManager.play('op');
                         onDeleteItem(item.id);
                       }}
-                      className="opacity-0 group-hover:opacity-100 hover:text-rose-400 transition-opacity"
+                      className="opacity-0 group-hover:opacity-100 hover:text-rose-400 transition-opacity cursor-pointer"
                       title="Delete item"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -163,11 +167,11 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                       onSelectResult(item.result);
                       onClose();
                     }}
-                    className="flex items-center gap-1 px-2 py-1 rounded bg-violet-950/60 border border-violet-500/30 text-cyan-300 hover:border-cyan-400 text-xs font-mono transition-colors"
-                    title="Insert result into calculator"
+                    className="flex items-center gap-1 px-2 py-1 rounded bg-violet-950/60 border border-violet-500/30 text-cyan-300 hover:border-cyan-400 text-xs font-mono transition-colors cursor-pointer"
+                    title={t.insert}
                   >
                     <CornerDownLeft className="w-3 h-3" />
-                    <span>Insert</span>
+                    <span>{t.insert}</span>
                   </button>
                 </div>
               </div>

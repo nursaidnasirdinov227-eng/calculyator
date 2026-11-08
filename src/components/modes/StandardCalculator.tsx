@@ -3,14 +3,18 @@ import { CalculatorDisplay } from '../calculator/CalculatorDisplay';
 import { MathEngine } from '../../utils/mathEngine';
 import { soundManager } from '../../utils/audio';
 
+import { Language } from '../../utils/i18n';
+
 interface StandardCalculatorProps {
   onAddHistory: (expr: string, res: string, mode: string) => void;
   initialValue?: string;
+  language?: Language;
 }
 
 export const StandardCalculator: React.FC<StandardCalculatorProps> = ({
   onAddHistory,
   initialValue,
+  language = 'en',
 }) => {
   const [expression, setExpression] = useState<string>(initialValue || '');
   const [resultPreview, setResultPreview] = useState<string>('');
@@ -214,6 +218,7 @@ export const StandardCalculator: React.FC<StandardCalculatorProps> = ({
         resultPreview={resultPreview}
         onClear={handleClear}
         onDelete={handleDelete}
+        language={language}
       />
 
       {/* Button Keypad Grid */}

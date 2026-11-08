@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { soundManager } from '../../utils/audio';
+import { Language, getTranslation } from '../../utils/i18n';
 
 type Base = 'HEX' | 'DEC' | 'OCT' | 'BIN';
 type WordSize = 'QWORD' | 'DWORD' | 'WORD' | 'BYTE';
@@ -8,12 +9,15 @@ type WordSize = 'QWORD' | 'DWORD' | 'WORD' | 'BYTE';
 interface ProgrammerCalculatorProps {
   onAddHistory: (expr: string, res: string, mode: string) => void;
   initialValue?: string;
+  language?: Language;
 }
 
 export const ProgrammerCalculator: React.FC<ProgrammerCalculatorProps> = ({
   onAddHistory,
   initialValue,
+  language = 'en',
 }) => {
+  const t = getTranslation(language);
   const [activeBase, setActiveBase] = useState<Base>('DEC');
   const [wordSize, setWordSize] = useState<WordSize>('DWORD');
   const [currentVal, setCurrentVal] = useState<bigint>(BigInt(0));
@@ -367,8 +371,8 @@ export const ProgrammerCalculator: React.FC<ProgrammerCalculatorProps> = ({
         {/* Interactive 32-bit Bitboard Visualizer */}
         <div className="mt-4 pt-3 border-t border-slate-800">
           <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono mb-1.5">
-            <span>BIT TOGGLE MATRIX</span>
-            <span className="text-slate-500">MSB [{bitLength - 1}] ... LSB [0]</span>
+            <span>{t.bitMatrix}</span>
+            <span className="text-slate-500">{t.msbLsb}</span>
           </div>
           <div className="grid grid-cols-8 gap-1 text-center font-mono">
             {Array.from({ length: bitLength }).map((_, i) => {

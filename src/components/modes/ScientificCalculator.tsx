@@ -3,14 +3,18 @@ import { CalculatorDisplay } from '../calculator/CalculatorDisplay';
 import { MathEngine, AngleMode } from '../../utils/mathEngine';
 import { soundManager } from '../../utils/audio';
 
+import { Language } from '../../utils/i18n';
+
 interface ScientificCalculatorProps {
   onAddHistory: (expr: string, res: string, mode: string) => void;
   initialValue?: string;
+  language?: Language;
 }
 
 export const ScientificCalculator: React.FC<ScientificCalculatorProps> = ({
   onAddHistory,
   initialValue,
+  language = 'en',
 }) => {
   const [expression, setExpression] = useState<string>(initialValue || '');
   const [resultPreview, setResultPreview] = useState<string>('');
@@ -186,6 +190,7 @@ export const ScientificCalculator: React.FC<ScientificCalculatorProps> = ({
         onToggleAngleMode={toggleAngleMode}
         onClear={handleClear}
         onDelete={handleDelete}
+        language={language}
       />
 
       {/* Main Scientific Grid: 5 columns */}

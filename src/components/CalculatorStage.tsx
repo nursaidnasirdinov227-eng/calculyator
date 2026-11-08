@@ -15,6 +15,7 @@ import { PercentageCalculator } from './modes/PercentageCalculator';
 import { CurrencyConverter } from './modes/CurrencyConverter';
 import { UnitConverter } from './modes/UnitConverter';
 import { soundManager } from '../utils/audio';
+import { Language, getTranslation } from '../utils/i18n';
 
 export type CalculatorMode =
   | 'standard'
@@ -29,6 +30,7 @@ interface CalculatorStageProps {
   onOpenHistory: () => void;
   historyCount: number;
   initialValue?: string;
+  language?: Language;
 }
 
 export const CalculatorStage: React.FC<CalculatorStageProps> = ({
@@ -36,16 +38,18 @@ export const CalculatorStage: React.FC<CalculatorStageProps> = ({
   onOpenHistory,
   historyCount,
   initialValue,
+  language = 'en',
 }) => {
   const [activeMode, setActiveMode] = useState<CalculatorMode>('standard');
+  const t = getTranslation(language);
 
   const modes = [
-    { id: 'standard', label: 'Standard', icon: CalcIcon, desc: 'Everyday arithmetic & powers' },
-    { id: 'scientific', label: 'Scientific', icon: Atom, desc: 'Trig, logs, roots & radian control' },
-    { id: 'programmer', label: 'Programmer', icon: Binary, desc: 'HEX/DEC/OCT/BIN & 32-bit bitboard' },
-    { id: 'percentage', label: 'Percentage', icon: Percent, desc: 'Ratio, change & margin analysis' },
-    { id: 'currency', label: 'Currency', icon: Coins, desc: 'Global exchange rates' },
-    { id: 'unit', label: 'Unit Convert', icon: Scale, desc: 'Metric, imperial & cosmic scales' },
+    { id: 'standard', label: t.modeStandard, icon: CalcIcon, desc: t.modeDescStandard },
+    { id: 'scientific', label: t.modeScientific, icon: Atom, desc: t.modeDescScientific },
+    { id: 'programmer', label: t.modeProgrammer, icon: Binary, desc: t.modeDescProgrammer },
+    { id: 'percentage', label: t.modePercentage, icon: Percent, desc: t.modeDescPercentage },
+    { id: 'currency', label: t.modeCurrency, icon: Coins, desc: t.modeDescCurrency },
+    { id: 'unit', label: t.modeUnit, icon: Scale, desc: t.modeDescUnit },
   ];
 
   const handleModeChange = (mode: CalculatorMode) => {
@@ -63,10 +67,10 @@ export const CalculatorStage: React.FC<CalculatorStageProps> = ({
               className="text-2xl sm:text-3xl font-extrabold text-white tracking-wide"
               style={{ fontFamily: 'Orbitron, sans-serif' }}
             >
-              COMPUTATIONAL COCKPIT
+              {t.cockpitTitle}
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Select an operational mode tailored to your analytical requirements.
+              {t.cockpitSubtitle}
             </p>
           </div>
 
@@ -78,7 +82,7 @@ export const CalculatorStage: React.FC<CalculatorStageProps> = ({
             className="flex items-center gap-2 px-3.5 py-2 rounded-xl cosmic-glass border border-violet-500/30 hover:border-cyan-400 text-xs font-mono text-cyan-300 transition-all cursor-pointer shadow-md hover:scale-105"
           >
             <History className="w-4 h-4 text-cyan-400" />
-            <span className="hidden sm:inline">Chronicles</span>
+            <span className="hidden sm:inline">{t.chronicles}</span>
             {historyCount > 0 && (
               <span className="px-1.5 py-0.2 rounded bg-violet-900 text-violet-200 text-[11px] font-bold">
                 {historyCount}
@@ -124,27 +128,48 @@ export const CalculatorStage: React.FC<CalculatorStageProps> = ({
 
         {/* Dynamic Mode Content */}
         {activeMode === 'standard' && (
-          <StandardCalculator onAddHistory={onAddHistory} initialValue={initialValue} />
+          <StandardCalculator
+            onAddHistory={onAddHistory}
+            initialValue={initialValue}
+            language={language}
+          />
         )}
 
         {activeMode === 'scientific' && (
-          <ScientificCalculator onAddHistory={onAddHistory} initialValue={initialValue} />
+          <ScientificCalculator
+            onAddHistory={onAddHistory}
+            initialValue={initialValue}
+            language={language}
+          />
         )}
 
         {activeMode === 'programmer' && (
-          <ProgrammerCalculator onAddHistory={onAddHistory} initialValue={initialValue} />
+          <ProgrammerCalculator
+            onAddHistory={onAddHistory}
+            initialValue={initialValue}
+            language={language}
+          />
         )}
 
         {activeMode === 'percentage' && (
-          <PercentageCalculator onAddHistory={onAddHistory} />
+          <PercentageCalculator
+            onAddHistory={onAddHistory}
+            language={language}
+          />
         )}
 
         {activeMode === 'currency' && (
-          <CurrencyConverter onAddHistory={onAddHistory} />
+          <CurrencyConverter
+            onAddHistory={onAddHistory}
+            language={language}
+          />
         )}
 
         {activeMode === 'unit' && (
-          <UnitConverter onAddHistory={onAddHistory} />
+          <UnitConverter
+            onAddHistory={onAddHistory}
+            language={language}
+          />
         )}
       </div>
     </section>

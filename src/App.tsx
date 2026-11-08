@@ -9,9 +9,20 @@ import { CosmicFooter } from './components/CosmicFooter';
 import { HistoryDrawer } from './components/HistoryDrawer';
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
 import { HistoryManager, HistoryItem } from './utils/history';
+import { Language } from './utils/i18n';
 
 export default function App() {
   const [theme, setTheme] = useState<string>('nebula');
+  const [language, setLanguage] = useState<Language>(() => {
+    try {
+      const saved = localStorage.getItem('cosmic_calc_lang');
+      if (saved === 'uz' || saved === 'en') return saved;
+    } catch {
+      // ignore
+    }
+    return 'uz'; // Default to Uzbek as requested by user
+  });
+
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState<boolean>(false);
@@ -26,6 +37,16 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Persist language
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+    try {
+      localStorage.setItem('cosmic_calc_lang', lang);
+    } catch {
+      // ignore
+    }
+  };
 
   const handleAddHistory = (expr: string, res: string, mode: string) => {
     const newItem = HistoryManager.addEntry(expr, res, mode);
@@ -42,9 +63,8 @@ export default function App() {
     setHistory([]);
   };
 
-  const handleSelectHistoryResult = (result: string) => {
+  const handleSelectResult = (result: string) => {
     setReusedValue(result);
-    // Smooth scroll to calculator
     const calcEl = document.getElementById('calculator');
     if (calcEl) {
       calcEl.scrollIntoView({ behavior: 'smooth' });
@@ -67,6 +87,8 @@ export default function App() {
       <CosmicNavbar
         currentTheme={theme}
         onThemeChange={setTheme}
+        language={language}
+        onLanguageChange={handleLanguageChange}
         onOpenShortcuts={() => setIsShortcutsOpen(true)}
         onOpenHistory={() => setIsHistoryOpen(true)}
         historyCount={history.length}
@@ -74,10 +96,14 @@ export default function App() {
 
       <main className="relative z-10">
         {/* Hero Section */}
-        <HeroSection onLaunchCalculator={handleLaunchCalculator} />
+        <HeroSection
+          language={language}
+          onLaunchCalculator={handleLaunchCalculator}
+        />
 
         {/* Main Calculator & Modes */}
         <CalculatorStage
+          language={language}
           onAddHistory={handleAddHistory}
           onOpenHistory={() => setIsHistoryOpen(true)}
           historyCount={history.length}
@@ -85,27 +111,29 @@ export default function App() {
         />
 
         {/* Features Showcase */}
-        <FeaturesShowcase />
+        <FeaturesShowcase language={language} />
 
         {/* About Section */}
-        <AboutSection />
+        <AboutSection language={language} />
       </main>
 
       {/* Footer */}
-      <CosmicFooter />
+      <CosmicFooter language={language} />
 
       {/* History Drawer */}
       <HistoryDrawer
+        language={language}
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
         history={history}
-        onSelectResult={handleSelectHistoryResult}
+        onSelectResult={handleSelectResult}
         onDeleteItem={handleDeleteHistoryItem}
         onClearAll={handleClearHistory}
       />
 
       {/* Keyboard Shortcuts Modal */}
       <KeyboardShortcutsModal
+        language={language}
         isOpen={isShortcutsOpen}
         onClose={() => setIsShortcutsOpen(false)}
       />

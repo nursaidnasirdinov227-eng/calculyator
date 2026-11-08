@@ -1,7 +1,14 @@
 import React from 'react';
 import { Orbit } from 'lucide-react';
+import { Language, getTranslation } from '../utils/i18n';
 
-export const CosmicFooter: React.FC = () => {
+interface CosmicFooterProps {
+  language?: Language;
+}
+
+export const CosmicFooter: React.FC<CosmicFooterProps> = ({ language = 'en' }) => {
+  const t = getTranslation(language);
+
   return (
     <footer className="border-t border-violet-500/20 bg-black/80 backdrop-blur-lg relative z-10 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
@@ -13,34 +20,34 @@ export const CosmicFooter: React.FC = () => {
             className="text-sm font-bold text-white tracking-wider"
             style={{ fontFamily: 'Orbitron, sans-serif' }}
           >
-            COSMIC CALCULATOR
+            {t.appName}
           </span>
           <span className="text-slate-500 text-xs hidden sm:inline">·</span>
           <span className="text-xs text-slate-400 hidden sm:inline">
-            Universal Mathematical Interface
+            {t.tagline}
           </span>
         </div>
 
         <div className="flex items-center gap-6 text-xs text-slate-400 font-medium">
           <a href="#hero" className="hover:text-cyan-300 transition-colors">
-            Home
+            {t.navHome}
           </a>
           <a href="#calculator" className="hover:text-cyan-300 transition-colors">
-            Calculator
+            {t.navCalculator}
           </a>
           <a href="#modes" className="hover:text-cyan-300 transition-colors">
-            Modes
+            {t.navModes}
           </a>
           <a href="#features" className="hover:text-cyan-300 transition-colors">
-            Features
+            {t.navFeatures}
           </a>
           <a href="#about" className="hover:text-cyan-300 transition-colors">
-            About
+            {t.navAbout}
           </a>
         </div>
 
         <div className="text-xs text-slate-500 font-mono">
-          © {new Date().getFullYear()} Cosmic Calculator. Designed for the Future.
+          © {new Date().getFullYear()} {t.footerCopy}
         </div>
       </div>
     </footer>

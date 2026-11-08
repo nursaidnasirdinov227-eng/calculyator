@@ -1,53 +1,54 @@
 import React from 'react';
 import { Cpu, Radio, Sparkles, Orbit, Binary, Layers } from 'lucide-react';
+import { Language, getTranslation } from '../utils/i18n';
 
-export const FeaturesShowcase: React.FC = () => {
+interface FeaturesShowcaseProps {
+  language?: Language;
+}
+
+export const FeaturesShowcase: React.FC<FeaturesShowcaseProps> = ({ language = 'en' }) => {
+  const t = getTranslation(language);
+
   const features = [
     {
       icon: Cpu,
-      title: 'Precision Math Kernel',
-      description:
-        'Engineered with high-precision tokenization and Reverse Polish Notation (RPN), eliminating floating-point rounding quirks.',
+      title: t.feat1Title,
+      description: t.feat1Desc,
       accent: 'text-cyan-400',
       border: 'hover:border-cyan-400/50',
     },
     {
       icon: Radio,
-      title: 'Haptic Audio Synthesizer',
-      description:
-        'Subtle sine and harmonic oscillators synthesize tactile cosmic blips on every keystroke, fully toggleable.',
+      title: t.feat2Title,
+      description: t.feat2Desc,
       accent: 'text-violet-400',
       border: 'hover:border-violet-400/50',
     },
     {
       icon: Binary,
-      title: '64-Bit Bitboard & Radix',
-      description:
-        'Simultaneous HEX, DEC, OCT, and BIN readouts with a clickable 32-bit matrix and bitwise operators.',
+      title: t.feat3Title,
+      description: t.feat3Desc,
       accent: 'text-indigo-400',
       border: 'hover:border-indigo-400/50',
     },
     {
       icon: Orbit,
-      title: 'Astrophysical Conversions',
-      description:
-        'Convert seamlessly across standard laboratory units and cosmic scales, from nanometers to light-years and Astronomical Units.',
+      title: t.feat4Title,
+      description: t.feat4Desc,
       accent: 'text-cyan-300',
       border: 'hover:border-cyan-300/50',
     },
     {
       icon: Layers,
-      title: 'Persistent Chronicles',
-      description:
-        'Every calculation is logged to session storage with one-click insertion back into your active compute terminal.',
+      title: t.feat5Title,
+      description: t.feat5Desc,
       accent: 'text-emerald-400',
       border: 'hover:border-emerald-400/50',
     },
     {
       icon: Sparkles,
-      title: 'Cosmic Atmosphere & Themes',
-      description:
-        'Interactive particle starfield, parallax dust, shooting meteors, and 4 cosmic color profiles.',
+      title: t.feat6Title,
+      description: t.feat6Desc,
       accent: 'text-pink-400',
       border: 'hover:border-pink-400/50',
     },
@@ -57,16 +58,16 @@ export const FeaturesShowcase: React.FC = () => {
     <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
       <div className="text-center max-w-3xl mx-auto mb-14">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-950/40 border border-violet-500/30 text-xs font-mono text-cyan-300 mb-3">
-          <span>ARCHITECTURAL CAPABILITIES</span>
+          <span>{t.featKicker}</span>
         </div>
         <h2
           className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight"
           style={{ fontFamily: 'Orbitron, sans-serif' }}
         >
-          ENGINEERED FOR THE COSMOS
+          {t.featTitle}
         </h2>
         <p className="mt-3 text-slate-400 text-base">
-          A harmonious union of computational rigor, deep-space aesthetics, and tactile micro-interactions.
+          {t.featSubtitle}
         </p>
       </div>
 

@@ -1,28 +1,33 @@
 import React from 'react';
 import { X, Keyboard } from 'lucide-react';
 import { soundManager } from '../utils/audio';
+import { Language, getTranslation } from '../utils/i18n';
 
 interface KeyboardShortcutsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  language?: Language;
 }
 
 export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
   isOpen,
   onClose,
+  language = 'en',
 }) => {
+  const t = getTranslation(language);
+
   if (!isOpen) return null;
 
   const shortcuts = [
-    { key: '0 – 9', desc: 'Input digits' },
-    { key: '.', desc: 'Decimal point' },
-    { key: '+ - * /', desc: 'Basic arithmetic operators' },
-    { key: 'Enter or =', desc: 'Compute / Evaluate result' },
-    { key: 'Backspace', desc: 'Delete last character' },
-    { key: 'Escape', desc: 'All Clear (AC)' },
-    { key: '( and )', desc: 'Parentheses' },
-    { key: '^', desc: 'Power function (xʸ)' },
-    { key: '%', desc: 'Percentage' },
+    { key: '0 – 9', desc: t.shortDigits },
+    { key: '.', desc: t.shortDecimal },
+    { key: '+ - * /', desc: t.shortOps },
+    { key: 'Enter / =', desc: t.shortEnter },
+    { key: 'Backspace', desc: t.shortBackspace },
+    { key: 'Escape', desc: t.shortEscape },
+    { key: '( / )', desc: t.shortParens },
+    { key: '^', desc: t.shortPower },
+    { key: '%', desc: t.shortPercent },
   ];
 
   return (
@@ -38,7 +43,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
               className="text-base font-bold text-white tracking-wider"
               style={{ fontFamily: 'Orbitron, sans-serif' }}
             >
-              KEYBOARD PROTOCOLS
+              {t.shortTitle}
             </h3>
           </div>
           <button
@@ -46,7 +51,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
               soundManager.play('click');
               onClose();
             }}
-            className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+            className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -72,9 +77,9 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
               soundManager.play('click');
               onClose();
             }}
-            className="px-5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium tracking-wide transition-colors"
+            className="px-5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium tracking-wide transition-colors cursor-pointer"
           >
-            Acknowledge
+            {t.shortAcknowledge}
           </button>
         </div>
       </div>

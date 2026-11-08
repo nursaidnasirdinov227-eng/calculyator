@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { ArrowLeftRight, Copy, Check, Scale, Ruler, Thermometer, Clock, Gauge, HardDrive, Compass, Layers } from 'lucide-react';
 import { soundManager } from '../../utils/audio';
+import { Language, getTranslation } from '../../utils/i18n';
 
 interface UnitConverterProps {
   onAddHistory: (expr: string, res: string, mode: string) => void;
+  language?: Language;
 }
 
 type UnitCategory = 'length' | 'weight' | 'temp' | 'area' | 'volume' | 'time' | 'speed' | 'data';
@@ -117,12 +119,27 @@ const CATEGORIES: Record<
   },
 };
 
-export const UnitConverter: React.FC<UnitConverterProps> = ({ onAddHistory }) => {
+export const UnitConverter: React.FC<UnitConverterProps> = ({
+  onAddHistory,
+  language = 'en',
+}) => {
+  const t = getTranslation(language);
   const [category, setCategory] = useState<UnitCategory>('length');
   const [amount, setAmount] = useState<string>('1');
   const [fromUnitId, setFromUnitId] = useState<string>('m');
   const [toUnitId, setToUnitId] = useState<string>('km');
   const [copied, setCopied] = useState<boolean>(false);
+
+  const categoryLabels: Record<UnitCategory, string> = {
+    length: t.catLength,
+    weight: t.catWeight,
+    temp: t.catTemp,
+    area: t.catArea,
+    volume: t.catVolume,
+    time: t.catTime,
+    speed: t.catSpeed,
+    data: t.catData,
+  };
 
   const activeCategory = CATEGORIES[category];
 
@@ -193,7 +210,7 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({ onAddHistory }) =>
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
-              <span>{item.label}</span>
+              <span>{categoryLabels[catKey]}</span>
             </button>
           );
         })}
@@ -204,7 +221,7 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({ onAddHistory }) =>
         {/* Input Value */}
         <div>
           <label className="block text-xs font-mono text-slate-400 mb-1.5 uppercase tracking-wider">
-            Magnitude Value
+            {t.unitMagnitude}
           </label>
           <input
             type="number"
@@ -217,7 +234,7 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({ onAddHistory }) =>
         {/* Unit Selectors & Swap Button */}
         <div className="grid grid-cols-1 sm:grid-cols-11 gap-3 items-center">
           <div className="sm:col-span-5">
-            <label className="block text-xs text-slate-400 mb-1">From Unit</label>
+            <label className="block text-xs text-slate-400 mb-1">{t.unitFrom}</label>
             <select
               value={fromUnitId}
               onChange={(e) => {
@@ -245,7 +262,7 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({ onAddHistory }) =>
           </div>
 
           <div className="sm:col-span-5">
-            <label className="block text-xs text-slate-400 mb-1">To Unit</label>
+            <label className="block text-xs text-slate-400 mb-1">{t.unitTo}</label>
             <select
               value={toUnitId}
               onChange={(e) => {
@@ -266,7 +283,7 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({ onAddHistory }) =>
         {/* Result Area */}
         <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
           <div>
-            <div className="text-xs text-slate-400 font-mono mb-1">Normalized Result</div>
+            <div className="text-xs text-slate-400 font-mono mb-1">{t.unitNormalized}</div>
             <div
               className="text-2xl sm:text-4xl font-bold font-mono text-cyan-300 tabular-nums drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]"
               style={{ fontFamily: 'Orbitron, JetBrains Mono, monospace' }}
@@ -278,17 +295,17 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({ onAddHistory }) =>
           <button
             onClick={handleCopy}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-violet-950/60 border border-violet-500/40 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 transition-all cursor-pointer text-xs font-mono"
-            title="Copy unit result"
+            title={t.copy}
           >
             {copied ? (
               <>
                 <Check className="w-4 h-4 text-emerald-400" />
-                <span className="text-emerald-400 font-bold">Copied</span>
+                <span className="text-emerald-400 font-bold">{t.copied}</span>
               </>
             ) : (
               <>
                 <Copy className="w-4 h-4" />
-                <span>Copy</span>
+                <span>{t.copy}</span>
               </>
             )}
           </button>

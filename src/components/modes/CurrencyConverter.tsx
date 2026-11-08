@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeftRight, RefreshCw, Copy, Check, TrendingUp } from 'lucide-react';
 import { soundManager } from '../../utils/audio';
+import { Language, getTranslation } from '../../utils/i18n';
 
 interface CurrencyConverterProps {
   onAddHistory: (expr: string, res: string, mode: string) => void;
+  language?: Language;
 }
 
 interface CurrencyInfo {
@@ -48,13 +50,17 @@ const FALLBACK_RATES: Record<string, number> = {
   MXN: 20.15,
 };
 
-export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHistory }) => {
+export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({
+  onAddHistory,
+  language = 'en',
+}) => {
+  const t = getTranslation(language);
   const [amount, setAmount] = useState<string>('100');
   const [fromCurrency, setFromCurrency] = useState<string>('USD');
   const [toCurrency, setToCurrency] = useState<string>('EUR');
   const [rates, setRates] = useState<Record<string, number>>(FALLBACK_RATES);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [lastUpdated, setLastUpdated] = useState<string>('Live fallback cache');
+  const [lastUpdated, setLastUpdated] = useState<string>(language === 'uz' ? 'Jonli zaxira bazasi' : 'Live fallback cache');
   const [isUsingLiveApi, setIsUsingLiveApi] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -135,15 +141,15 @@ export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHisto
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-slate-500">{isUsingLiveApi ? '● Live ER API' : '● Offline Base'}</span>
+          <span className="text-[11px] text-slate-500">{isUsingLiveApi ? t.currLiveApi : t.currOfflineBase}</span>
           <button
             onClick={() => {
               soundManager.play('click');
               fetchRates();
             }}
             disabled={isLoading}
-            className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-cyan-300 transition-colors"
-            title="Refresh exchange rates"
+            className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer"
+            title={t.currRefresh}
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-cyan-400' : ''}`} />
           </button>
@@ -155,7 +161,7 @@ export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHisto
         {/* Amount Input */}
         <div>
           <label className="block text-xs font-mono text-slate-400 mb-1.5 uppercase tracking-wider">
-            Transfer / Convert Amount
+            {t.currTransferAmount}
           </label>
           <div className="relative">
             <input
@@ -172,7 +178,7 @@ export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHisto
         <div className="grid grid-cols-1 sm:grid-cols-11 gap-3 items-center">
           {/* From Currency */}
           <div className="sm:col-span-5">
-            <label className="block text-xs text-slate-400 mb-1">From Currency</label>
+            <label className="block text-xs text-slate-400 mb-1">{t.currFrom}</label>
             <select
               value={fromCurrency}
               onChange={(e) => {
@@ -202,7 +208,7 @@ export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHisto
 
           {/* To Currency */}
           <div className="sm:col-span-5">
-            <label className="block text-xs text-slate-400 mb-1">To Currency</label>
+            <label className="block text-xs text-slate-400 mb-1">{t.currTo}</label>
             <select
               value={toCurrency}
               onChange={(e) => {
@@ -223,7 +229,7 @@ export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHisto
         {/* Big Conversion Result Banner */}
         <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
           <div>
-            <div className="text-xs text-slate-400 font-mono mb-1">Estimated Converted Amount</div>
+            <div className="text-xs text-slate-400 font-mono mb-1">{t.currConverted}</div>
             <div
               className="text-2xl sm:text-4xl font-bold font-mono text-cyan-300 tabular-nums drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]"
               style={{ fontFamily: 'Orbitron, JetBrains Mono, monospace' }}
@@ -235,17 +241,17 @@ export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHisto
           <button
             onClick={handleCopy}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-violet-950/60 border border-violet-500/40 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 transition-all cursor-pointer text-xs font-mono"
-            title="Copy converted value"
+            title={t.copy}
           >
             {copied ? (
               <>
                 <Check className="w-4 h-4 text-emerald-400" />
-                <span className="text-emerald-400 font-bold">Copied</span>
+                <span className="text-emerald-400 font-bold">{t.copied}</span>
               </>
             ) : (
               <>
                 <Copy className="w-4 h-4" />
-                <span>Copy</span>
+                <span>{t.copy}</span>
               </>
             )}
           </button>
@@ -254,7 +260,7 @@ export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ onAddHisto
 
       {/* Timestamp note */}
       <div className="text-[11px] text-slate-500 text-right font-mono">
-        Last rate update: {lastUpdated}
+        {t.currLastUpdate}: {lastUpdated}
       </div>
     </div>
   );
