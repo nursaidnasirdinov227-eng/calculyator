@@ -1,0 +1,6 @@
+{
+  "name": "Cosmic Calculator",
+  "description": "An extraordinary next-generation cosmic calculator featuring standard, scientific, programmer, percentage, currency, and unit conversion modes in an immersive deep space glassmorphic experience.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
